@@ -1,7 +1,12 @@
 package com.sebas.accompermibt_2
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -50,55 +55,38 @@ private fun Sample(multiplePermissionsState: MultiplePermissionsState) {
         // If all permissions are granted, then show screen with the feature enabled
         Text("BT permissions Granted! Thank you!")
     } else {
-        Column {
-            Text(
-                getTextToShowGivenPermissions(
-                    multiplePermissionsState.revokedPermissions,
-                    multiplePermissionsState.shouldShowRationale
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
-                Text("Request permissions")
+        PermissionDialog(
+            permission =if (isPermanentlyDeclined) {
+                "Al parecer ud declino el permiso del Bluetooth, permanentemente " +
+                        "Ud. puede ir a la configuracion del telefono y otorgar el permiso."
+            } else {
+                "Esta app requiere el Bluetooth para comunicarse con el vehiculo "
             }
-        }
+                    isPermanentlyDeclined =!shouldShowRequestPermissionRationale(
+                Manifest.permission.CAMERA
+            ),
+            onDismiss = {/*viewModel::dismissDialog*/},
+            onOkClick = {/*  viewModel.dismissDialog()*/
+            },
+            onGoToAppSettingsClick = ::openAppSettings
+        )
     }
 }
 
 
-@OptIn(ExperimentalPermissionsApi::class)
-private fun getTextToShowGivenPermissions(
-    permissions: List<PermissionState>,
-    shouldShowRationale: Boolean
-): String {
-    val revokedPermissionsSize = permissions.size
-    if (revokedPermissionsSize == 0) return ""
 
-    val textToShow = StringBuilder().apply {
-        append("The ")
-    }
-
-    for (i in permissions.indices) {
-        textToShow.append(permissions[i].permission)
-        when {
-            revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
-                textToShow.append(", and ")
-            }
-            i == revokedPermissionsSize - 1 -> {
-                textToShow.append(" ")
-            }
-            else -> {
-                textToShow.append(", ")
-            }
-        }
-    }
-    textToShow.append(if (revokedPermissionsSize == 1) "permission is" else "permissions are")
-    textToShow.append(
-        if (shouldShowRationale) {
-            " important. Please grant all of them for the app to function properly."
-        } else {
-            " denied. The app cannot function without them."
-        }
-    )
-    return textToShow.toString()
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
 }
+
+
+
+//        Column {
+//
+//            Spacer(modifier = Modifier.height(8.dp))
+//            Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
+//                Text("Request permissions")
+//            }
