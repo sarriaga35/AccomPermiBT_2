@@ -1,6 +1,9 @@
 package com.sebas.accompermibt_2
 
+import android.util.Log
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +26,7 @@ fun PermissionDialog (
 ) {
 
     AlertDialog(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.absoluteOffset(x = 0.dp,y = 0.dp),
         title = {
             Text(
                 text = stringResource(R.string.permision),
@@ -48,13 +51,16 @@ fun PermissionDialog (
         },
         onDismissRequest = onDismiss,
         confirmButton = {
+
 //            if (isPermanentlyDeclined) {
 //                onGoToAppSettingsClick()
 //            } else {
 //                onOkClick()
 //            }
             TextButton(
-                onClick = { onOkClick},
+                onClick = {
+                    Log.i("valor","OnOkClickLauncMultiple permission Request")
+                    onOkClick},
                 elevation = ButtonDefaults.elevatedButtonElevation(2.dp)
             ) {
                 Text(

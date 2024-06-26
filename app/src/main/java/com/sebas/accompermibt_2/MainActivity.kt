@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -47,13 +48,16 @@ class MainActivity : ComponentActivity() {
             AccomPermiBT_2Theme {
                 val versionSDK30 = listOf(android.Manifest.permission.BLUETOOTH)
                 val versionSDK31 = listOf(android.Manifest.permission.BLUETOOTH_CONNECT, android.Manifest.permission.BLUETOOTH_SCAN)
+
                 val BTPermissionsState = rememberMultiplePermissionsState(
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) versionSDK31 else versionSDK30
                 )
-                if (!BTPermissionsState.allPermissionsGranted) {
+
+                if (BTPermissionsState.allPermissionsGranted) {
                     // If all permissions are granted, then show screen with the feature enabled
                     Text("BT permissions Granted! Thank you!")
                 } else {
+                    BTPermissionsState.launchMultiplePermissionRequest()
                     PermissionDialog(
                         permission =if (BTPermissionsState.shouldShowRationale) {
                             "Al parecer ud declino el permiso del Bluetooth, permanentemente " +
@@ -65,7 +69,9 @@ class MainActivity : ComponentActivity() {
                         ,
                         isPermanentlyDeclined= !BTPermissionsState.shouldShowRationale,
                         onDismiss = {/*viewModel::dismissDialog*/},
-                        onOkClick = {BTPermissionsState.launchMultiplePermissionRequest()},
+                        onOkClick = {
+
+                            BTPermissionsState.launchMultiplePermissionRequest()},
                         onGoToAppSettingsClick = ::openAppSettings
                     )
 
