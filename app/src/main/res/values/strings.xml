@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AccomPermiBT_2</string>
+
+        <string name="permision">Permission</string>
+        <string name="txt_dialog_permission">You are a Papachongo that we are interested in hiring for unusual actions.</string>
+        <string name="confirmation">Confirmation</string>
+        <string name="dimiss">Dimiss</string>
+
 </resources>

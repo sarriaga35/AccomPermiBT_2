@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AccomPermiBT_2</string>
+    <string name="permision">Autorisation</string>
+    <string name="txt_dialog_permission">Vous êtes un Papachongo que nous souhaitons embaucher pour des actions insolites.</string>
+    <string name="confirmation">Affirmation</string>
+    <string name="dimiss">Rejeter</string>
+</resources>
